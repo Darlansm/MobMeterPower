@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +10,10 @@ export class HomePage {
 
   equipamentos: any[]= [];
 
-  constructor(private alertCtrl : AlertController, private toastCtrl : ToastController){
+  constructor(private alertCtrl : AlertController, 
+    private toastCtrl : ToastController,
+    private navCtrl : NavController
+    ){
 
     let equipamentoJson = localStorage.getItem("equipamentoDb");
     if( equipamentoJson != null){
@@ -73,15 +76,30 @@ export class HomePage {
     this.equipamentos.push(equipamento);
     //console.log(this.equipamentos[0]);
     this.updateLocalStorage();
-    
-
-    
+       
   }
 
   updateLocalStorage(){
 
     localStorage.setItem('equipamentoDb', JSON.stringify(this.equipamentos) );
     console.log("deu certo");
+  }
+
+  async open(equipamento: any) {
+
+    console.log(equipamento);
+
+    this.navCtrl.navigateForward(['meter',{name: equipamento.name}]);
+    
+   
+  }
+
+  async delete(equipamento: any){
+    // equipamentoArray => equipamento!= equipamentoArray
+    // Tras todo mundo que não seje o equipamento que veio como paramentos e cria novo array.
+    this.equipamentos = this.equipamentos.filter(equipamentoArray => equipamento != equipamentoArray);
+    this.updateLocalStorage();
+
   }
 
 
